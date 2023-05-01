@@ -165,10 +165,9 @@ class ConvolutionalLayer:
         
         batch_size, height, width, channels = X.shape
         
-        out_height = height - self.filter_size + 1 #Нужная высота Кол-во X по высоте - фильтр + 1 
-        out_width =  width - self.filter_size + 1 #Нужная ширина
-        
-        # За глубиной следить не надо.
+        out_height = height - self.filter_size + 1 
+        out_width =  width - self.filter_size + 1 
+       
         # TODO: Implement forward pass
         # Hint: setup variables that hold the result
         # and one x/y location at a time in the loop below
@@ -179,9 +178,7 @@ class ConvolutionalLayer:
         # but try to avoid having any other loops
         W_reshaped = self.W.value.reshape(-1, out_channels)
         B = self.B.value
-         #Решейпим веса, в 2-мерое п-во 
-        
-       
+              
         result = np.zeros([batch_size, out_height, out_width, out_channels])
         
         for y in range(out_height):
@@ -199,19 +196,19 @@ class ConvolutionalLayer:
         # You already know how to backprop through that
         # when you implemented FullyConnectedLayer
         # Just do it the same number of times and accumulate gradients
-        # Инициализируем Х
+      
         X = self.X
         filter_size = self.filter_size
         padding = self.padding
         
-        #Инициализируем градиенты.
+       
         self.W.grad = np.zeros_like(self.W.value)
         self.B.grad = np.zeros_like(self.B.value)
         
         batch_size, height, width, channels = X.shape
         _, out_height, out_width, out_channels = d_out.shape
         
-        #Инициализируем веса.
+        
         W_reshaped = self.W.value.reshape(-1, out_channels)
         
         dX = np.zeros_like(X)
@@ -226,7 +223,7 @@ class ConvolutionalLayer:
                 # TODO: Implement backward pass for specific location
                 # Aggregate gradients for both the input and
                 # the parameters (W and B)
-                true_grad = d_out[:, y, x, :] # Внутрянняя размерность d_out(высота и ширина) такая же как и у result в слое forward
+                true_grad = d_out[:, y, x, :] 
                 
                 X_without_reshape = X[:, y:y+filter_size, x:x+filter_size, :]
                 X_reshaped = X_without_reshape.reshape((batch_size, -1))
@@ -240,7 +237,7 @@ class ConvolutionalLayer:
                 self.B.grad += dB
                 
                 dX_not_res = np.dot(true_grad, W_reshaped.transpose())
-                dX_res = dX_not_res.reshape((batch_size, filter_size, filter_size, self.in_channels)) #Решейпим по фильтер сайз, тк uhfдиенты считаем по области фильтра. ТОЧНО
+                dX_res = dX_not_res.reshape((batch_size, filter_size, filter_size, self.in_channels)) 
                 
                 dX[:, y:y+filter_size, x:x+filter_size,:] += dX_res
                 
@@ -271,8 +268,7 @@ class MaxPoolingLayer:
         pool_size = self.pool_size
         stride = self.stride
         self.X = X
-        #Проверить на чётность размер матрицы и посмотреть до какого элемента может идти макс пулл с шагом 
-        #делить на размер окна в общем случае это пойдет
+        
         out_height = int(np.floor((height - pool_size) / stride)) + 1
         out_width = int(np.floor((width - pool_size) / stride)) + 1
             
@@ -284,10 +280,10 @@ class MaxPoolingLayer:
         for batch in range(batch_size):
             for y in range(out_height):
                 for x in range(out_width):
-                    for channel in range(channels): # В каждом батче и каждом канале слой maxpooling  свой
-                        y_source = y * stride # Таким образом мы по примерам, с шагом страйд
+                    for channel in range(channels):
+                        y_source = y * stride 
                         x_source = x * stride
-                        pool = X[batch, y_source:y_source+pool_size, x_source:x_source+pool_size, channel] # выбираем элементы матрицы размером maxpool
+                        pool = X[batch, y_source:y_source+pool_size, x_source:x_source+pool_size, channel] 
                         maximum = np.max(pool)
                         max_polling[batch, y, x, channel] = maximum
                 
@@ -318,7 +314,7 @@ class MaxPoolingLayer:
                         
                         maximum = np.max(pool)
                         max_count = np.count_nonzero(pool == maximum)
-                        argmax = np.argwhere(pool==maximum) #Находит индексы элементов, которые равны максимуму. Почему-то пишет в жвумерный массив.Поэтому нужно непосредсвенно извлекать индксы: argmax[:,0], argmax[:,1] 
+                        argmax = np.argwhere(pool==maximum) 
                        
                         mask[argmax[:,0], argmax[:,1]] = d_out[batch, y, x, channel] / max_count
                         

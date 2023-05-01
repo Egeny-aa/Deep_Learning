@@ -51,7 +51,7 @@ class Trainer:
 
         self.optimizers = None
 
-    def setup_optimizers(self): # оптимизирует параметры
+    def setup_optimizers(self): 
         params = self.model.params()
         self.optimizers = {}
         for param_name, param in params.items():
@@ -87,18 +87,17 @@ class Trainer:
         train_acc_history = []
         val_acc_history = []
         
-        # инициализация данных
+    
         X = self.dataset.train_X
         y = self.dataset.train_y
         
         for epoch in range(self.num_epochs):
-            shuffled_indices = np.arange(num_train) # массив длиной от 0 до len(num_train)
+            shuffled_indices = np.arange(num_train)
             
-            np.random.shuffle(shuffled_indices) # мешаем индексы эпохи
+            np.random.shuffle(shuffled_indices)
             
-            sections = np.arange(self.batch_size, num_train, self.batch_size) # Делает массив с шаго в длину батча
-            
-            batches_indices = np.array_split(shuffled_indices, sections) # формирует массив индексов батчей
+            sections = np.arange(self.batch_size, num_train, self.batch_size) 
+            batches_indices = np.array_split(shuffled_indices, sections) 
             
         
             batch_losses = []
@@ -110,19 +109,19 @@ class Trainer:
                 # use model to generate loss and gradients for all
                 # the params
                  
-                data_X = X[batch_indices] # выбираем из данных только те, которые по батч индексу(рандомные перемешанные)
+                data_X = X[batch_indices] 
                 data_y = y[batch_indices]
                 
-                Loss = self.model.compute_loss_and_gradients(data_X, data_y) # Тренируем модель на этих данных
+                Loss = self.model.compute_loss_and_gradients(data_X, data_y) 
                 
                            
                 for param_name, param in self.model.params().items():
                     optimizer = self.optimizers[param_name]
                     param.value = optimizer.update(param.value, param.grad, self.learning_rate)
                
-                batch_losses.append(Loss)#Записываем лосс в масив лоссов по батчу
+                batch_losses.append(Loss)
 
-            if np.not_equal(self.learning_rate_decay, 1.0): # выводит Тру, если значения передаваемые ему не равны друг-другу
+            if np.not_equal(self.learning_rate_decay, 1.0): 
                 # TODO: Implement learning rate decay
                 self.learning_rate = self.learning_rate * self.learning_rate_decay
                 

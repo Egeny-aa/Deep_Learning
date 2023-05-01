@@ -17,10 +17,9 @@ class TwoLayerNet:
         reg, float - L2 regularization strength
         """
         self.reg = reg
-        self.Linear1 = FullyConnectedLayer(n_input, hidden_layer_size) # (3072,3)
+        self.Linear1 = FullyConnectedLayer(n_input, hidden_layer_size)
         self.ReLu = ReLULayer()
-        self.Linear2 = FullyConnectedLayer(hidden_layer_size, n_output)    #Выдаст 10 предказаний N_OUTPUT отвечает за количество выходов, т-есть за количество нейонов
-        # 2 полносвязных слоя гвоорят о том, что у нас 2 параметра W1,W2, B1,B2
+        self.Linear2 = FullyConnectedLayer(hidden_layer_size, n_output)   
         # TODO Create necessary layers
         #raise Exception("Not implemented!")
 
@@ -37,13 +36,7 @@ class TwoLayerNet:
         # clear parameter gradients aggregated from the previous pass
         # TODO Set parameter gradient to zeros
         # Hint: using self.params() might be useful!
-        # self.params() - дает нам параметры полносВзного слоя
-        
-        # Вначале идет полносвязный слой, затем слой функции активации,
-        # В слое 3 нейрона 
-        
-        
-        
+             
         params = self.params()
         
         W1 = params['W1']
@@ -72,8 +65,6 @@ class TwoLayerNet:
         bacward_ReLu = self.ReLu.backward(backward_2)
         backward_1 = self.Linear1.backward(bacward_ReLu)
         
-        # К лоссу прибавляем все регуляризации. ОТ W1,B1, W2, B2
-        # raise Exception("Not implemented!")
         W1_loss, W1_grad = l2_regularization(W1.value, self.reg)
         B1_loss, B1_grad = l2_regularization(B1.value, self.reg)
         W2_loss, W2_grad = l2_regularization(W2.value, self.reg)
@@ -106,7 +97,7 @@ class TwoLayerNet:
         
         forward_Lauer1 = self.Linear1.forward(X)
         activationReLu = self.ReLu.forward(forward_Lauer1)
-        forward_Lauer2 = self.Linear2.forward(activationReLu) # выдает массив размероv кол-во семплов ХХ классы(всего классов 10)
+        forward_Lauer2 = self.Linear2.forward(activationReLu) 
        
         vectorizeEXP = np.vectorize(np.exp)
         exp = vectorizeEXP(forward_Lauer2)
@@ -116,7 +107,7 @@ class TwoLayerNet:
         
         return pred
 
-    def params(self): # Инициализация параметров линейного слоя. По итогу сюда будут записываться градиенты
+    def params(self): 
         result = {
         'W1': self.Linear1.params()['W'],
         'B1': self.Linear1.params()['B'],

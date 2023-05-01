@@ -35,8 +35,7 @@ def softmax_with_cross_entropy(preds, target_index):
       loss, single value - cross-entropy loss
       dprediction, np array same shape as predictions - gradient of predictions by loss value
     """
-     #Ищем softmax_FUNCTION 
-    #Обязательно нормируем, иначе потеря значимости иля переполнение
+
     preds = preds - np.max(preds, axis = 1).reshape(preds.shape[0], 1)
     
     exp_vectorize = np.vectorize(np.exp)
@@ -76,11 +75,11 @@ class ReLULayer:
 
     def forward(self, X):
         self.X = X
-        #Не надо присвать глобально ТАК КАК идет обращение к селф ИХ
+     
         # TODO: Implement forward pass
         # Hint: you'll need to save some information about X
         # to use it later in the backward pass
-        #X[(X < 0)] = 0 При таком присваивании Х изменяется везде. Поэтому проверка градиента не проходит
+       
         res = np.maximum(0,X)
         return res
 
@@ -98,10 +97,10 @@ class ReLULayer:
         """
         # TODO: Implement backward pass
         # Your final implementation shouldn't have any loops
-        # Скореее всего придется умножить d_out на матрицу градиента От X_ReLu
+     
         X = self.X 
         d_result = (self.X > 0) * d_out  #X[a1,a2], grad[dw1,dw2]
-        #(self.X > 0) - булева матрица, при умножении TRUE - 1, FALSE - 0 
+     
         return d_result
         raise Exception("Not implemented!")
 
@@ -147,7 +146,7 @@ class FullyConnectedLayer:
 
         # It should be pretty similar to linear classifier from
         # the previous assignment
-        #Размерноть каждого выходного градиента должнать быть такой же как и размерность входных даннх
+       
         dX = np.dot(d_out, self.W.value.transpose())
         
         dW = np.dot(self.X.value.transpose(), d_out)

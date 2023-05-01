@@ -28,11 +28,10 @@ def check_gradient(f, x, delta=1e-5, tol=1e-4):
         ix = it.multi_index
         analytic_grad_at_ix = analytic_grad[ix]
         numeric_grad_at_ix = 0
-        #Нужен массив, где на позиции ix будет прибавляться делта и вычитаться.
+       
         idx = x.copy()
         id_x = x.copy()
-        idx[ix] = idx[ix] + delta # Из позиции ix мы вычитаем дельту
-        id_x[ix] = id_x[ix] - delta
+        idx[ix] = idx[ix] + delta 
         # TODO Copy from previous assignment
         numeric_grad_at_ix = (f(idx)[0] - f(id_x)[0]) / (2 * delta)
         if not np.isclose(numeric_grad_at_ix, analytic_grad_at_ix, tol):

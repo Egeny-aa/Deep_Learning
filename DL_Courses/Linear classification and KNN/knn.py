@@ -56,7 +56,7 @@ class KNN:
             for i_train in range(num_train):
                 dists[i_test][i_train] =  sum(np.absolute(X[i_test] - self.train_X[i_train]))
         return dists
-    #В каждой ячейке расстояние от I вектора(размеченного) до J неразмеченного
+    
 
     def compute_distances_one_loop(self, X):
         '''
@@ -73,9 +73,10 @@ class KNN:
         num_train = self.train_X.shape[0]
         num_test = X.shape[0]
         dists = np.zeros((num_test, num_train), np.float32)
+        
         for i_test in range(num_test):
-#Взяди первую строку из траин массива, из тестового массива вычли ее, транспонировали массив, сложили по столбцам. Получили массив расстояний от помеченной переменной(например Y1) из траина и до непомеченных. Строчка соответсвует метки
              dists[i_test] = sum(np.absolute(self.train_X - X[i_test]).transpose())
+        
         return dists
 
     def compute_distances_no_loops(self, X):
@@ -92,7 +93,6 @@ class KNN:
         '''
         num_train = self.train_X.shape[0]
         num_test = X.shape[0]
-        # Using float32 to to save memory - the default is float64
         dists = np.zeros((num_test, num_train), np.float32)
         # TODO: Implement computing all distances with no loops!
         
@@ -111,15 +111,18 @@ class KNN:
         pred, np array of bool (num_test_samples) - binary predictions 
            for every test sample
         '''
-      
+         # TODO:
         num_test = dists.shape[0]
         pred = np.zeros(num_test, np.bool)
         K = self.k
+        
         for i in range(num_test):
+            
             if sum(np.sort(dists[i][self.train_y])[0:self.k]) < sum(np.sort(dists[i][~self.train_y])[0:self.k]):
                 pred[i] = True
             else:
                 pred[i] = False
+        
         return pred
 
     def predict_labels_multiclass(self, dists):
@@ -134,9 +137,11 @@ class KNN:
         pred, np array of int (num_test_samples) - predicted class index 
            for every test sample
         '''
+         # TODO:
         num_test = dists.shape[0]
         num_test = dists.shape[0]
         pred = np.zeros(num_test, np.int)
+        
         for i in range(num_test):
             result_sort = np.vstack([dists[i], self.train_y])
             result_sort = result_sort[:, result_sort[0].argsort()]
